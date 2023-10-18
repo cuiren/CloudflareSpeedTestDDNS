@@ -138,7 +138,7 @@ updateDNSRecords() {
           delete_url="$url/$record_id"
           delete_response=$(curl -sm10 -X DELETE "$delete_url" -H "X-Auth-Email: $x_email" -H "X-Auth-Key: $api_key")
           if [[ $(echo "$delete_response" | jq -r '.success') == "true" ]]; then
-            echo "成功删除DNS记录$(echo "$record" | jq -r '.name')" 
+            echo "成功删除DNS记录$(echo "$record" | jq -r '.name')" >/dev/null 2>&1
           else
             echo "删除DNS记录失败"
           fi
@@ -188,7 +188,7 @@ updateDNSRecords() {
       }'
       response=$(curl -s -X POST "$url" -H "X-Auth-Email: $x_email" -H "X-Auth-Key: $api_key" -H "Content-Type: application/json" -d "$data")
       if [[ $(echo "$response" | jq -r '.success') == "true" ]]; then
-        echo "${subdomain}.${domain}-was_change_to-$ip"
+        echo "${subdomain}.${domain}成功指向IP地址$ip"
       else
         echo "更新IP地址${ip}失败"
       fi
