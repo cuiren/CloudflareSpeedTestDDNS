@@ -20,7 +20,7 @@ PushDeerURL="https://api2.pushdeer.com/message/push?pushkey=${PushDeerPushKey}"
 WX_tkURL="$wxapi/cgi-bin/gettoken"
 WXURL="$wxapi/cgi-bin/message/send?access_token="
 
-##tg推送##
+##tg推送Part-1##
 if [[ -z ${telegramBotToken} ]]; then
    echo "未配置TG推送"
 else
@@ -35,6 +35,29 @@ else
       echo "TG推送成功";
    else
       echo "TG推送失败，请检查网络或TG机器人token和ID";
+   fi
+fi
+####
+##tg推送Part-2##
+# Extract and format the relevant columns from result.csv
+    awk -F, 'NR>1 {print ""$1"延迟:"$5"ms,速度:"$6"MB/s"}' ./cf_ddns/result.csv > merged_data.txt
+# Read the merged data and send it to Telegram
+    message=$(cat merged_data.txt)
+
+if [[ -z ${telegramBotToken} ]]; then
+   echo "未配置TG推送"
+else
+   res=$(timeout 20s curl -s -X POST $TGURL -d "chat_id=$telegramBotUserId" -d "text=$message")
+
+   if [ $? == 124 ];then
+      echo 'TG_api请求超时,请检查网络是否重启完成并是否能够访问TG'
+   fi
+
+   resSuccess=$(echo "$res" | jq -r ".ok")
+   if [[ $resSuccess = "true" ]]; then
+      echo "TG-part2推送成功";
+   else
+      echo "TG-part2推送失败，请检查网络或TG机器人token和ID";
    fi
 fi
 ####
