@@ -24,6 +24,7 @@ case $DNS_PROVIDER in
         ;;
     2)
         source ./cf_ddns/cf_ddns_cloudflare_multiple.sh
+        ;;
     3)   
         source ./cf_ddns/cf_ddns_dnspod.sh
         ;;
