@@ -188,7 +188,7 @@ updateDNSRecords() {
       }'
       response=$(curl -s -X POST "$url" -H "X-Auth-Email: $x_email" -H "X-Auth-Key: $api_key" -H "Content-Type: application/json" -d "$data")
       if [[ $(echo "$response" | jq -r '.success') == "true" ]]; then
-        echo "${subdomain}.${domain}成功指向IP地址$ip"
+        echo "${subdomain}.${domain}-was_change_to-$ip"
       else
         echo "更新IP地址${ip}失败"
       fi
